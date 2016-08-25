@@ -1,0 +1,14 @@
+{
+  "name": "ubelix-slurm",
+  "version": "0.1.0",
+  "author": "Färber, Nico <nico.faerber@id.unibe.ch>",
+  "summary": "Provisioning and management of nodes in a SLURM cluster",
+  "license": "Apache-2.0",
+  "source": "https://idos-code.unibe.ch/projects/UBELIX/repos/ubelix-slurm/browse",
+  "project_page": "https://idos-code.unibe.ch/projects/UBELIX/repos/ubelix-slurm/browse",
+  "issues_url": "https://idos-issues.unibe.ch/projects/UXPM",
+  "dependencies": [
+    {"version_requirement":">= 1.0.0","name":"puppetlabs-stdlib"}
+  ]
+}
+
