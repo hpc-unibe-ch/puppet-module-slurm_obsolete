@@ -1,41 +1,44 @@
 # == Class: slurm
 #
-# Full description of class slurm here.
+# Module for provisioning and managing of nodes in a SLURM cluster
+# 
+# This class only makes the default parameters available in a more 
+# secure fashion for later use
 #
 # === Parameters
 #
-# Document parameters here.
+# none
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
-#
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
-#
-# === Examples
-#
-#  class { 'slurm':
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
-#
-# === Authors
-#
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2016 Your name here, unless otherwise noted.
-#
-class slurm {
+class slurm (
+  $is_slurm_master     = $slurm::params::is_slurm_master,
+  $is_slurm_worker     = $slurm::params::is_slurm_worker,
+  $is_slurm_db         = $slurm::params::is_slurm_db,
+  $disable_munge       = $slurm::params::disable_munge,
+  $disable_pam         = $slurm::params::disable_pam,
+  $manage_user_locally = $slurm::manage_user_locally,
+  $munge_key           = $slurm::params::munge_key,
+  $slurm_conf_dir      = $slurm::params::slurm_conf_dir,
+) inherits slurm::params {
 
+  include slurm::common
+  
+  if $slurm::is_slurm_master {
+    include slurm::master::install
+    include slurm::master::config
+    include slurm::master::service
+  }
+
+  if $slurm::is_slurm_worker {
+    include slurm::worker::install
+    include slurm::worker::config
+    include slurm::worker::service
+  }
+
+  if $slurm::is_slurm_db {
+    include slurm::db::install
+    include slurm::db::config
+    include slurm::db::service
+  }
 
 }
+
