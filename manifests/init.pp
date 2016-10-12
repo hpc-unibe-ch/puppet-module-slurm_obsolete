@@ -15,9 +15,16 @@ class slurm (
   $is_slurm_db         = $slurm::params::is_slurm_db,
   $disable_munge       = $slurm::params::disable_munge,
   $disable_pam         = $slurm::params::disable_pam,
-  $manage_user_locally = $slurm::manage_user_locally,
+  $manage_user_locally = $slurm::params::manage_user_locally,
+  $slurm_user          = $slurm::params::slurm_user,
+  $slurm_user_id       = $slurm::params::slurm_user_id,
+  $slurm_group         = $slurm::params::slurm_group,
+  $slurm_group_id      = $slurm::params::slurm_group_id,
+  $munge_user          = $slurm::params::munge_user,
+  $munge_user_id       = $slurm::params::munge_user_id,
+  $munge_group         = $slurm::params::munge_group,
+  $munge_group_id      = $slurm::params::munge_group_id,
   $munge_key           = $slurm::params::munge_key,
-  $slurm_conf_dir      = $slurm::params::slurm_conf_dir,
 ) inherits slurm::params {
 
   include slurm::common
@@ -26,18 +33,33 @@ class slurm (
     include slurm::master::install
     include slurm::master::config
     include slurm::master::service
+
+    Class['slurm::common'] ->
+    Class['slurm::master::install']->
+    Class['slurm::master::config']->
+    Class['slurm::master::service']
   }
 
   if $slurm::is_slurm_worker {
     include slurm::worker::install
     include slurm::worker::config
     include slurm::worker::service
+
+    Class['slurm::common'] ->
+    Class['slurm::worker::install']->
+    Class['slurm::worker::config']->
+    Class['slurm::worker::service']
   }
 
   if $slurm::is_slurm_db {
     include slurm::db::install
     include slurm::db::config
     include slurm::db::service
+
+    Class['slurm::common'] ->
+    Class['slurm::db::install']->
+    Class['slurm::db::config']->
+    Class['slurm::db::service']
   }
 
 }

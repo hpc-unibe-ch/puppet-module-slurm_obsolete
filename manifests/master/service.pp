@@ -9,10 +9,11 @@
 class slurm::master::service {
 
   service {$slurm::slurm_master_service:
-    ensure => running,
-    enable => true,
-    hasstatus => true,
+    ensure     => running,
+    enable     => true,
+    hasstatus  => true,
     hasrestart => true,
+    require    => Class['slurm::db::service'],
   }
 
 }
