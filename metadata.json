@@ -1,6 +1,6 @@
 {
   "name": "ubelix-slurm",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Färber, Nico <nico.faerber@id.unibe.ch>",
   "summary": "Provisioning and management of nodes in a SLURM cluster",
   "license": "Apache-2.0",
