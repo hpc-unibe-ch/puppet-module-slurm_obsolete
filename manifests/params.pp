@@ -8,14 +8,14 @@ class slurm::params {
   $is_slurm_worker     = false
   $is_slurm_db         = false
   $disable_munge       = false
-  $disable_pam         = false
+  $disable_pam         = true
   $manage_user_locally = true
   $munge_key           = undef
 
   case $::operatingsystem {
     /^(RedHat|CentOS)$/: {
       $munge_packages        = [ 'munge', 'munge-libs', 'munge-devel']
-      $slurm_common_packages = [ 'slurm', 'slurm-devel', 'slurm-perlapi', 'slurm-plugins', 'slurm-munge', 'slurm-sjobexit', 'slurm-sjstat', 'slurm-torque' ]
+      $slurm_common_packages = [ 'slurm', 'slurm-devel', 'slurm-perlapi', 'slurm-plugins', 'slurm-munge', 'slurm-sjobexit', 'slurm-sjstat']
       $slurm_pam_packages    = [ 'slurm-pam_slurm' ]
       $slurm_sql_packages    = [ 'slurm-slurmdbd', 'slurm-sql' ]
       $munge_service         = 'munge'
