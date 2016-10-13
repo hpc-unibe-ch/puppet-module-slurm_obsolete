@@ -27,10 +27,15 @@ class slurm::params {
       $slurm_group_id        = undef
       $slurm_user            = $slurm_group
       $slurm_user_id         = undef
+      $config_dir            = '/etc/slurm'
 
       case $::operatingsystemmajrelease {
+        '6': {
+          $slurm_service        = 'slurm'
+          $slurm_master_service = 'slurm'
+          $slurm_db_service     = 'slurmdbd'
+        }
         '7': {
-          $config_dir           = '/etc/slurm'
           $slurm_service        = 'slurmd'
           $slurm_master_service = 'slurmctld'
           $slurm_db_service     = 'slurmdbd'
