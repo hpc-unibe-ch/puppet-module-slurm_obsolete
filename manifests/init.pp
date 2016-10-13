@@ -65,13 +65,7 @@ class slurm (
   }
 
   if $slurm::is_slurm_login {
-    include slurm::login::install
     include slurm::login::config
-    include slurm::login::service
-
-    Class['slurm::login::install']->
-    Class['slurm::login::config']->
-    Class['slurm::login::service']
   }
 
 }
