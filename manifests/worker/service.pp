@@ -13,6 +13,7 @@ class slurm::worker::service {
     enable     => true,
     hasstatus  => true,
     hasrestart => true,
+    subscribe  => File['/etc/sysconfig/slurm'],
   }
 
 }

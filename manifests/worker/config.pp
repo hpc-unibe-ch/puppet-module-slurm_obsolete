@@ -23,4 +23,11 @@ class slurm::worker::config {
     mode   => '0644',
   }
 
+  file { '/etc/sysconfig/slurm':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/slurm/slurm_sysconfig',
+  }
 }
