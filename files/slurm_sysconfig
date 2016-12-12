@@ -1,0 +1,11 @@
+# Increase the memlock limit so that user tasks can get
+# unlimited memlock
+ulimit -l unlimited
+#
+# Increase the open file limit
+ulimit -n 8192
+#
+# Memlocks the slurmd process's memory so that if a node
+# starts swapping, the slurmd will continue to respond
+SLURMD_OPTIONS="-M"
+
