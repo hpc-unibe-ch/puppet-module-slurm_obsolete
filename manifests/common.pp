@@ -25,14 +25,6 @@ class slurm::common {
     }
   }
 
-  unless $slurm::disable_pam {
-    package { $slurm::slurm_pam_packages:
-      ensure          => 'present',
-      install_options => '--nogpgcheck',
-      require         => Package[$slurm::slurm_common_packages],
-    }
-  }
-
   #### Munge Configuration ####
 
   if $slurm::manage_user_locally {
@@ -64,12 +56,12 @@ class slurm::common {
       path    => '/etc/munge/munge.key',
       source  => $slurm::munge_key,
       owner   => $slurm::munge_user,
-      group   => $slurm::munge_group,
-      mode    => '0400', 
+      group   => $slurm::munge_group
+      mode    => '0400',
       require => Package['munge'],
     }
   }
- 
+
   #### Slurm Configuration ####
 
   if $slurm::manage_user_locally {

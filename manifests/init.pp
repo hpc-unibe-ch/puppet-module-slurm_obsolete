@@ -15,7 +15,6 @@ class slurm (
   $is_slurm_db         = $slurm::params::is_slurm_db,
   $is_slurm_login      = $slurm::params::is_slurm_login,
   $disable_munge       = $slurm::params::disable_munge,
-  $disable_pam         = $slurm::params::disable_pam,
   $manage_user_locally = $slurm::params::manage_user_locally,
   $slurm_user          = $slurm::params::slurm_user,
   $slurm_user_id       = $slurm::params::slurm_user_id,
