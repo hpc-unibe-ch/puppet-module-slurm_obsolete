@@ -1,3 +1,6 @@
+2016-03-10 Release 0.2.0
+- Fix rpm packages for Slurm 17.x
+
 2016-12-12 Release 0.1.2
 - addition of sysconfig file
 - update module infrastructure
