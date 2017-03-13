@@ -56,7 +56,7 @@ class slurm::common {
       path    => '/etc/munge/munge.key',
       content => file($slurm::munge_key),
       owner   => $slurm::munge_user,
-      group   => $slurm::munge_group
+      group   => $slurm::munge_group,
       mode    => '0400',
       require => Package['munge'],
     }
