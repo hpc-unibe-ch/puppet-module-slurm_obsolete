@@ -53,7 +53,7 @@ class slurm::login::config {
     file {'munge key':
       ensure  => 'file',
       path    => '/etc/munge/munge.key',
-      source  => $slurm::munge_key,
+      content => file($slurm::munge_key),
       owner   => $slurm::munge_user,
       group   => $slurm::munge_group,
       mode    => '0400',
