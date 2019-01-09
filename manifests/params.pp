@@ -14,20 +14,21 @@ class slurm::params {
 
   case $::operatingsystem {
     /^(RedHat|CentOS)$/: {
-      $munge_packages        = [ 'munge', 'munge-libs', 'munge-devel' ]
-      $slurm_common_packages = [ 'slurm', 'slurm-contribs', 'slurm-plugins', 'slurm-munge', 'slurm-devel', 'slurm-perlapi' ]
-      $slurm_login_packages  = [ 'slurm', 'slurm-plugins', 'slurm-munge' ]
-      $slurm_sql_packages    = [ 'slurm-slurmdbd', 'slurm-sql' ]
-      $munge_service         = 'munge'
-      $munge_group           = 'munge'
-      $munge_group_id        = undef
-      $munge_user            = $munge_group
-      $munge_user_id         = undef
-      $slurm_group           = 'slurm'
-      $slurm_group_id        = undef
-      $slurm_user            = $slurm_group
-      $slurm_user_id         = undef
-      $config_dir            = '/etc/slurm'
+      $munge_packages         = [ 'munge', 'munge-libs', 'munge-devel' ]
+      $slurm_common_packages  = [ 'slurm', 'slurm-contribs', 'slurm-devel', 'slurm-perlapi', 'slurm-libpmi' ]
+      $slurm_master_packages  = [ 'slurm-slurmctld' ]
+      $slurm_db_packages      = [ 'slurm-slurmdbd' ]
+      $slurm_worker_packages  = [ 'slurm-slurmd' ]
+      $munge_service          = 'munge'
+      $munge_group            = 'munge'
+      $munge_group_id         = undef
+      $munge_user             = $munge_group
+      $munge_user_id          = undef
+      $slurm_group            = 'slurm'
+      $slurm_group_id         = undef
+      $slurm_user             = $slurm_group
+      $slurm_user_id          = undef
+      $config_dir             = '/etc/slurm'
 
       case $::operatingsystemmajrelease {
         '6': {

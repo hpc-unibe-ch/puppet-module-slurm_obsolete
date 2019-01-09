@@ -8,13 +8,6 @@
 #
 class slurm::login::config {
 
-  package { $slurm::slurm_login_packages:
-    ensure          => 'present',
-    install_options => '--nogpgcheck',
-    before          => File['munge key'],
-    require         => [User['slurm'], User['munge']],
-  }
-
   unless $slurm::disable_munge {
     package { $slurm::munge_packages:
       ensure          => 'present',
