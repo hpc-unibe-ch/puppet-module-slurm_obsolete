@@ -64,7 +64,11 @@ class slurm (
   }
 
   if $slurm::is_slurm_login {
+    include slurm::common
     include slurm::login::config
+
+    Class['slurm::common'] ->
+    Class['slurm::login::config']
   }
 
 }

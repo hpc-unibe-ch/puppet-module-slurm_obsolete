@@ -8,7 +8,7 @@
 #
 class slurm::db::install {
 
-  package { $slurm::slurm_sql_packages:
+  package { $slurm::slurm_db_packages:
     ensure          => 'present',
     install_options => '--nogpgcheck',
   }
