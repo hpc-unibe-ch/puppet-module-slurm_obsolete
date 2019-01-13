@@ -1,3 +1,6 @@
+2019-01-13 Release 0.4.1
+- Fix support for EL6
+
 2019-01-09 Release 0.4.0
 - Fix rpm packages for Slurm 18.x
 
