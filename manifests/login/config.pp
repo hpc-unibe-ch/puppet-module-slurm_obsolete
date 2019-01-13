@@ -8,15 +8,6 @@
 #
 class slurm::login::config {
 
-  unless $slurm::disable_munge {
-    package { $slurm::munge_packages:
-      ensure          => 'present',
-      install_options => '--nogpgcheck',
-      before          => File['munge key'],
-      #require        => Yumrepo['epel'],
-    }
-  }
-
   #### Munge Configuration ####
 
   if $slurm::manage_user_locally {
