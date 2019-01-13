@@ -15,7 +15,19 @@ class slurm::params {
   case $::operatingsystem {
     /^(RedHat|CentOS)$/: {
       $munge_packages         = [ 'munge', 'munge-libs', 'munge-devel' ]
-      $slurm_common_packages  = [ 'slurm', 'slurm-contribs', 'slurm-devel', 'slurm-perlapi', 'slurm-libpmi' ]
+
+      case $::operatingsystemmajrelease {
+        '6': {
+          $slurm_common_packages  = [ 'slurm', 'slurm-munge', 'slurm-plugins' ]
+        }
+        '7': {
+          $slurm_common_packages  = [ 'slurm', 'slurm-contribs', 'slurm-devel', 'slurm-perlapi', 'slurm-libpmi' ]
+        }
+        default: {
+          fail('This major release is not supported')
+        }
+      }
+
       $slurm_master_packages  = [ 'slurm-slurmctld' ]
       $slurm_db_packages      = [ 'slurm-slurmdbd' ]
       $slurm_worker_packages  = [ 'slurm-slurmd' ]
