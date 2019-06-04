@@ -19,7 +19,7 @@ class slurm::worker::config {
   file { '/var/log/slurm/slurmd.log':
     ensure => file,
     owner  => $slurm::slurm_user,
-    group  => $slurm::slurm_group,
+    group  => 'root',
     mode   => '0644',
   }
 
