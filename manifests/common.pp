@@ -13,7 +13,7 @@ class slurm::common {
     ensure          => 'present',
     install_options => { '--disablerepo' => 'epel' },
     before          => File['munge key'],
-    require         => [User['slurm'], User['munge']],
+    require         => [User['slurm'], User['munge'], Package['munge']],
   }
 
   unless $slurm::disable_munge {
