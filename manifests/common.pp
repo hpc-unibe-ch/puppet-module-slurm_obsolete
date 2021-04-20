@@ -11,7 +11,9 @@ class slurm::common {
   #### Install packages ####
   package { $slurm::slurm_common_packages:
     ensure          => 'present',
-    install_options => '--nogpgcheck',
+    install_options =>  {
+      ‘--disablerepo’ => ‘epel’
+    },
     before          => File['munge key'],
     require         => [User['slurm'], User['munge']],
   }
@@ -19,7 +21,9 @@ class slurm::common {
   unless $slurm::disable_munge {
     package { $slurm::munge_packages:
       ensure          => 'present',
-      install_options => '--nogpgcheck',
+      install_options =>  {
+        ‘--disablerepo’ => ‘epel’
+      },
       before          => File['munge key'],
       #require        => Yumrepo['epel'],
     }

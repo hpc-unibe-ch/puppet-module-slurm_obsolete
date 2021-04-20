@@ -10,7 +10,9 @@ class slurm::worker::install {
 
   package { $slurm::slurm_worker_packages:
     ensure          => 'present',
-    install_options => '--nogpgcheck',
+    install_options =>  {
+      ‘--disablerepo’ => ‘epel’
+    },
   }
 
 }
