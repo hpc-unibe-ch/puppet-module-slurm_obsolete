@@ -10,7 +10,7 @@ class slurm::db::install {
 
   package { $slurm::slurm_db_packages:
     ensure          => 'present',
-    install_options => '--nogpgcheck',
+    install_options => { 'enable_repo' => 'epel' },
   }
 
 }
