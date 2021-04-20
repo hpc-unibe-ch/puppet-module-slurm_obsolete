@@ -19,9 +19,7 @@ class slurm::common {
   unless $slurm::disable_munge {
     package { $slurm::munge_packages:
       ensure          => 'present',
-      install_options => { '--disablerepo' => 'epel' },
       before          => File['munge key'],
-      #require        => Yumrepo['epel'],
     }
   }
 
