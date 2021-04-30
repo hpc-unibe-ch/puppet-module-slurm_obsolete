@@ -1,59 +1,117 @@
 # slurm
 
-#### Table of Contents
+Welcome to your new module. A short overview of the generated parts can be found
+in the [PDK documentation][1].
 
-1. [Overview](#overview)
-2. [Module Description - What the module does and why it is useful](#module-description)
-3. [Setup - The basics of getting started with slurm](#setup)
+The README template below provides a starting point with details about what
+information to include in your README.
+
+## Table of Contents
+
+1. [Description](#description)
+1. [Setup - The basics of getting started with slurm](#setup)
     * [What slurm affects](#what-slurm-affects)
     * [Setup requirements](#setup-requirements)
     * [Beginning with slurm](#beginning-with-slurm)
-4. [Usage - Configuration options and additional functionality](#usage)
-5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
-5. [Limitations - OS compatibility, etc.](#limitations)
-6. [Development - Guide for contributing to the module](#development)
+1. [Usage - Configuration options and additional functionality](#usage)
+1. [Limitations - OS compatibility, etc.](#limitations)
+1. [Development - Guide for contributing to the module](#development)
 
-## Overview
+## Description
 
-A one-maybe-two sentence summary of what the module does/what problem it solves. This is your 30 second elevator pitch for your module. Consider including OS/Puppet version it works with.
+Briefly tell users why they might want to use your module. Explain what your
+module does and what kind of problems users can solve with it.
 
-## Module Description
-
-If applicable, this section should have a brief description of the technology the module integrates with and what that integration enables. This section should answer the questions: "What does this module *do*?" and "Why would I use it?"
-
-If your module has a range of functionality (installation, configuration, management, etc.) this is the time to mention it.
+This should be a fairly short description helps the user decide if your module
+is what they want.
 
 ## Setup
 
-### What slurm affects
+### What slurm affects **OPTIONAL**
 
-* A list of files, packages, services, or operations that the module will alter, impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form. 
+If it's obvious what your module touches, you can skip this section. For
+example, folks can probably figure out that your mysql_instance module affects
+their MySQL instances.
+
+If there's more that they should know about, though, this is the place to
+mention:
+
+* Files, packages, services, or operations that the module will alter, impact,
+  or execute.
+* Dependencies that your module automatically installs.
+* Warnings or other important notices.
 
 ### Setup Requirements **OPTIONAL**
 
-If your module requires anything extra before setting up (pluginsync enabled, etc.), mention it here. 
+If your module requires anything extra before setting up (pluginsync enabled,
+another module, etc.), mention it here.
+
+If your most recent release breaks compatibility or requires particular steps
+for upgrading, you might want to include an additional "Upgrading" section here.
 
 ### Beginning with slurm
 
-The very basic steps needed for a user to get the module up and running. 
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you may wish to include an additional section here: Upgrading (For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+The very basic steps needed for a user to get the module up and running. This
+can include setup steps, if necessary, or it can be an example of the most basic
+use of the module.
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing the fancy stuff with your module here. 
+Include usage examples for common use cases in the **Usage** section. Show your
+users how to use your module to solve problems, and be sure to include code
+examples. Include three to five examples of the most important or common tasks a
+user can accomplish with your module. Show users how to accomplish more complex
+tasks that involve different types, classes, and functions working in tandem.
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module. This section should include all of the under-the-hood workings of your module so people know what the module is touching on their system but don't need to mess with things. (We are working on automating this section!)
+This section is deprecated. Instead, add reference information to your code as
+Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your
+module. For details on how to add code comments and generate documentation with
+Strings, see the [Puppet Strings documentation][2] and [style guide][3].
+
+If you aren't ready to use Strings yet, manually create a REFERENCE.md in the
+root of your module directory and list out each of your module's classes,
+defined types, facts, functions, Puppet tasks, task plans, and resource types
+and providers, along with the parameters for each.
+
+For each element (class, defined type, function, and so on), list:
+
+* The data type, if applicable.
+* A description of what the element does.
+* Valid values, if the data type doesn't make it obvious.
+* Default value, if any.
+
+For example:
+
+```
+### `pet::cat`
+
+#### Parameters
+
+##### `meow`
+
+Enables vocalization in your cat. Valid options: 'string'.
+
+Default: 'medium-loud'.
+```
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+In the Limitations section, list any incompatibilities, known issues, or other
+warnings.
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them know what the ground rules for contributing are.
+In the Development section, tell other users the ground rules for contributing
+to your project and how they should submit their work.
 
+## Release Notes/Contributors/Etc. **Optional**
+
+If you aren't using changelog, put your release notes here (though you should
+consider using changelog). You can also add any additional sections you feel are
+necessary or important to include here. Please use the `##` header.
+
+[1]: https://puppet.com/docs/pdk/latest/pdk_generating_modules.html
+[2]: https://puppet.com/docs/puppet/latest/puppet_strings.html
+[3]: https://puppet.com/docs/puppet/latest/puppet_strings_style.html
