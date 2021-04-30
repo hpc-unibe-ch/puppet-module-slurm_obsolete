@@ -8,10 +8,7 @@
   "project_page": "https://github.com/hpc-unibe-ch/puppet-module-slurm",
   "issues_url": "https://github.com/hpc-unibe-ch/puppet-module-slurm/issues",
   "dependencies": [
-    {
-      "version_requirement": ">= 1.0.0",
-      "name": "puppetlabs-stdlib"
-    }
+
   ],
   "operatingsystem_support": [
     {
