@@ -16,12 +16,13 @@ slurm::slurm_user_home: '/var/lib/slurm'
 slurm::slurm_user_managehome: true
 slurm::slurm_user_comment: 'SLURM User'
 
-# Slurm packages related configuration options
-slurm::package_ensure: 'present'
-
 # Slurm services related configuration options
 slurm::reload_services: true
 slurm::restart_services: false
 slurm::slurmd_service_ensure: 'running'
 slurm::slurmdbd_service_ensure: 'running'
 slurm::slurmctld_service_ensure: 'running'
+
+# Other settings
+slurm::package_ensure: 'present'
+slurm::manage_logrotate: true

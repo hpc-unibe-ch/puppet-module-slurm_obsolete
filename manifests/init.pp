@@ -31,6 +31,8 @@ class slurm (
   String  $slurmd_service_ensure,
   String  $slurmdbd_service_ensure,
   String  $slurmctld_service_ensure,
+  # Other options
+  Boolean $manage_logrotate,
 ) {
 
   ### Hardcoded options currently not overridable ###
@@ -39,6 +41,9 @@ class slurm (
   $slurm_user_home       = '/var/lib/slurm'
   $slurm_user_managehome = true
   $slurm_user_comment    = 'SLURM User'
+  # Managed directories
+  $conf_dir = '/etc/slurm'
+  $log_dir  = '/var/log/slurm'
 
   # Compute which services and how to notify on changes
   if $slurmd and $slurmd_service_ensure == 'running' and $reload_services and $facts['slurmd_version'] {

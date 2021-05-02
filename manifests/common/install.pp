@@ -2,7 +2,7 @@
 class slurm::common::install {
 
   # First install dependencies needed before disabling EPEL
-  ['hdf5', 'libaec'].each |String $package| {
+  ['hdf5', 'libaec', 'pmix'].each |String $package| {
     package { $package:
       ensure => present,
     }
