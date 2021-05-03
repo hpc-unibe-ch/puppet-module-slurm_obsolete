@@ -20,9 +20,11 @@ slurm::slurm_user_comment: 'SLURM User'
 slurm::reload_services: true
 slurm::restart_services: false
 slurm::slurmd_service_ensure: 'running'
+slurm::slurmd_service_limits: {}
 slurm::slurmdbd_service_ensure: 'running'
 slurm::slurmctld_service_ensure: 'running'
 
 # Other settings
 slurm::package_ensure: 'present'
 slurm::manage_logrotate: true
+slurm::manage_firewall: false

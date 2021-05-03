@@ -14,38 +14,61 @@
 #   class { 'slurm':
 #
 class slurm (
-  Boolean $client,
-  Boolean $slurmd,
-  Boolean $slurmdbd,
-  Boolean $slurmctld,
-  String  $package_ensure,
+  Optional[Boolean] $client,
+  Optional[Boolean] $slurmd,
+  Optional[Boolean] $slurmdbd,
+  Optional[Boolean] $slurmctld,
+  Optional[String]  $package_ensure,
   # Slurm user and group management related options
-  Boolean $manage_slurm_user,
-  String  $slurm_user,
-  Integer $slurm_user_uid,
-  String  $slurm_user_group,
-  Integer $slurm_user_group_gid,
-  # Services ensures
-  Boolean $reload_services,
-  Boolean $restart_services,
-  String  $slurmd_service_ensure,
-  String  $slurmdbd_service_ensure,
-  String  $slurmctld_service_ensure,
+  Optional[Boolean] $manage_slurm_user,
+  Optional[String]  $slurm_user,
+  Optional[Integer] $slurm_user_uid,
+  Optional[String]  $slurm_user_group,
+  Optional[Integer] $slurm_user_group_gid,
+  # Services related options
+  Optional[Boolean] $reload_services,
+  Optional[Boolean] $restart_services,
+  Optional[String]  $slurmd_service_ensure,
+  Optional[Hash]    $slurmd_service_limits,
+  Optional[String]  $slurmdbd_service_ensure,
+  Optional[String]  $slurmctld_service_ensure,
   # Other options
-  Boolean $manage_logrotate,
+  Optional[Boolean] $manage_logrotate,
+  Optional[Boolean] $manage_firewall,
 ) {
+
+  $osfamily = fact('os.family')
+  $osmajor = fact('os.release.major')
+  $os = "${osfamily}-${osmajor}"
+  $supported = ['RedHat-7','RedHat-8']
+  if ! ($os in $supported) {
+    fail("Unsupported OS: ${os}, module ${module_name} only supports RedHat 7 and 8")
+  }
 
   ### Hardcoded options currently not overridable ###
   # Slurm user and group management related options
-  $slurm_user_shell      = '/sbin/nologin'
-  $slurm_user_home       = '/var/lib/slurm'
-  $slurm_user_managehome = true
-  $slurm_user_comment    = 'SLURM User'
+  $slurm_user_shell              = '/sbin/nologin'
+  $slurm_user_home               = '/var/lib/slurm'
+  $slurm_user_managehome         = true
+  $slurm_user_comment            = 'SLURM User'
   # Managed directories
-  $conf_dir = '/etc/slurm'
-  $log_dir  = '/var/log/slurm'
+  $conf_dir                      = '/etc/slurm'
+  $log_dir                       = '/var/log/slurm'
+  $slurmd_spool_dir              = '/var/spool/slurmd.spool'
+  $slurmctld_state_save_location = '/var/spool/slurmctld.state'
+  $slurmctld_job_checkpoint_dir  = '/var/spool/slurmctld.checkpoint'
+  # Network ports of daemons
+  $slurmctld_port                = 6817
+  $slurmd_port                   = 6818
+  $slurmdbd_port                 = 6819
+  # Configuration files
+  $slurm_conf_path               = "${conf_dir}/slurm.conf"
+  $topology_conf_path            = "${conf_dir}/topology.conf"
+  $gres_conf_path                = "${conf_dir}/gres.conf"
+  $slurmdbd_conf_path            = "${conf_dir}/slurmdbd.conf"
+  $cgroup_conf_path              = "${conf_dir}/cgroup.conf"
 
-  # Compute which services and how to notify on changes
+  # Compute which services are to be notified and how to notify these on changes
   if $slurmd and $slurmd_service_ensure == 'running' and $reload_services and $facts['slurmd_version'] {
     $slurmd_notify = Exec['slurmd reload']
   } elsif $slurmd and $slurmd_service_ensure == 'running' and $restart_services {
