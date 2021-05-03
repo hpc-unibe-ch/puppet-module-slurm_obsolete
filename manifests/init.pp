@@ -29,9 +29,14 @@ class slurm (
   Optional[Boolean] $reload_services,
   Optional[Boolean] $restart_services,
   Optional[String]  $slurmd_service_ensure,
+  Optional[Boolean] $slurmd_service_enable,
   Optional[Hash]    $slurmd_service_limits,
   Optional[String]  $slurmdbd_service_ensure,
+  Optional[Boolean] $slurmdbd_service_enable,
+  Optional[Hash]    $slurmdbd_service_limits,
   Optional[String]  $slurmctld_service_ensure,
+  Optional[Boolean] $slurmctld_service_enable,
+  Optional[Hash]    $slurmctld_service_limits,
   # Other options
   Optional[Boolean] $manage_logrotate,
   Optional[Boolean] $manage_firewall,
@@ -55,12 +60,17 @@ class slurm (
   $conf_dir                      = '/etc/slurm'
   $log_dir                       = '/var/log/slurm'
   $slurmd_spool_dir              = '/var/spool/slurmd.spool'
+  $slurmdbd_archive_dir          = '/var/lib/slurmdbd.archive'
   $slurmctld_state_save_location = '/var/spool/slurmctld.state'
   $slurmctld_job_checkpoint_dir  = '/var/spool/slurmctld.checkpoint'
   # Network ports of daemons
   $slurmctld_port                = 6817
   $slurmd_port                   = 6818
   $slurmdbd_port                 = 6819
+  # Additional daemon cli arguments
+  $slurmctld_options             = ''
+  $slurmd_options                = ''
+  $slurmdbd_options              = ''
   # Configuration files
   $slurm_conf_path               = "${conf_dir}/slurm.conf"
   $topology_conf_path            = "${conf_dir}/topology.conf"
