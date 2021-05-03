@@ -1,75 +1,127 @@
-# == Class: slurm
+# @summary Simplicistic module to manage Slurm installation
 #
-# Module for provisioning and managing of nodes in a SLURM cluster
-# 
-# This class only makes the default parameters available in a more 
-# secure fashion for later use
+# This module currently helps to install. However it does not
+# configure Slurm in terms of contents in /etc/slurm (slurm.conf,
+# gres.conf, ...). Currently the module manages:
+# * Installation of RPMs for given role
+# * Creation of user and group slurm
 #
-# === Parameters
+# Note on config: Just store contents of `/etc/slurm` in a git repo
+# and clone it on your shared filesystem to the final path using
+# `puppetlabs-vcsrepo`.
 #
-# none
+# @example
+#   class { 'slurm':
 #
 class slurm (
-  $is_slurm_master     = $slurm::params::is_slurm_master,
-  $is_slurm_worker     = $slurm::params::is_slurm_worker,
-  $is_slurm_db         = $slurm::params::is_slurm_db,
-  $is_slurm_login      = $slurm::params::is_slurm_login,
-  $disable_munge       = $slurm::params::disable_munge,
-  $manage_user_locally = $slurm::params::manage_user_locally,
-  $slurm_user          = $slurm::params::slurm_user,
-  $slurm_user_id       = $slurm::params::slurm_user_id,
-  $slurm_group         = $slurm::params::slurm_group,
-  $slurm_group_id      = $slurm::params::slurm_group_id,
-  $munge_user          = $slurm::params::munge_user,
-  $munge_user_id       = $slurm::params::munge_user_id,
-  $munge_group         = $slurm::params::munge_group,
-  $munge_group_id      = $slurm::params::munge_group_id,
-  $munge_key           = $slurm::params::munge_key,
-) inherits slurm::params {
+  Optional[Boolean] $client,
+  Optional[Boolean] $slurmd,
+  Optional[Boolean] $slurmdbd,
+  Optional[Boolean] $slurmctld,
+  Optional[String]  $package_ensure,
+  # Slurm user and group management related options
+  Optional[Boolean] $manage_slurm_user,
+  Optional[String]  $slurm_user,
+  Optional[Integer] $slurm_user_uid,
+  Optional[String]  $slurm_user_group,
+  Optional[Integer] $slurm_user_group_gid,
+  # Services related options
+  Optional[Boolean] $reload_services,
+  Optional[Boolean] $restart_services,
+  Optional[String]  $slurmd_service_ensure,
+  Optional[Boolean] $slurmd_service_enable,
+  Optional[Hash]    $slurmd_service_limits,
+  Optional[String]  $slurmdbd_service_ensure,
+  Optional[Boolean] $slurmdbd_service_enable,
+  Optional[Hash]    $slurmdbd_service_limits,
+  Optional[String]  $slurmctld_service_ensure,
+  Optional[Boolean] $slurmctld_service_enable,
+  Optional[Hash]    $slurmctld_service_limits,
+  # Other options
+  Optional[Boolean] $manage_logrotate,
+  Optional[Boolean] $manage_firewall,
+) {
 
-  if $slurm::is_slurm_master {
-    include slurm::common
-    include slurm::master::install
-    include slurm::master::config
-    include slurm::master::service
-
-    Class['slurm::common'] ->
-    Class['slurm::master::install']->
-    Class['slurm::master::config']->
-    Class['slurm::master::service']
+  $osfamily = fact('os.family')
+  $osmajor = fact('os.release.major')
+  $os = "${osfamily}-${osmajor}"
+  $supported = ['RedHat-7','RedHat-8']
+  if ! ($os in $supported) {
+    fail("Unsupported OS: ${os}, module ${module_name} only supports RedHat 7 and 8")
   }
 
-  if $slurm::is_slurm_worker {
-    include slurm::common
-    include slurm::worker::install
-    include slurm::worker::config
-    include slurm::worker::service
+  ### Hardcoded options currently not overridable ###
+  # Slurm user and group management related options
+  $slurm_user_shell              = '/sbin/nologin'
+  $slurm_user_home               = '/var/lib/slurm'
+  $slurm_user_managehome         = true
+  $slurm_user_comment            = 'SLURM User'
+  # Managed directories
+  $conf_dir                      = '/etc/slurm'
+  $log_dir                       = '/var/log/slurm'
+  $slurmd_spool_dir              = '/var/spool/slurmd.spool'
+  $slurmdbd_archive_dir          = '/var/lib/slurmdbd.archive'
+  $slurmctld_state_save_location = '/var/spool/slurmctld.state'
+  $slurmctld_job_checkpoint_dir  = '/var/spool/slurmctld.checkpoint'
+  # Network ports of daemons
+  $slurmctld_port                = 6817
+  $slurmd_port                   = 6818
+  $slurmdbd_port                 = 6819
+  # Additional daemon cli arguments
+  $slurmctld_options             = ''
+  $slurmd_options                = ''
+  $slurmdbd_options              = ''
+  # Configuration files
+  $slurm_conf_path               = "${conf_dir}/slurm.conf"
+  $topology_conf_path            = "${conf_dir}/topology.conf"
+  $gres_conf_path                = "${conf_dir}/gres.conf"
+  $slurmdbd_conf_path            = "${conf_dir}/slurmdbd.conf"
+  $cgroup_conf_path              = "${conf_dir}/cgroup.conf"
 
-    Class['slurm::common'] ->
-    Class['slurm::worker::install']->
-    Class['slurm::worker::config']->
-    Class['slurm::worker::service']
+  # Compute which services are to be notified and how to notify these on changes
+  if $slurmd and $slurmd_service_ensure == 'running' and $reload_services and $facts['slurmd_version'] {
+    $slurmd_notify = Exec['slurmd reload']
+  } elsif $slurmd and $slurmd_service_ensure == 'running' and $restart_services {
+    $slurmd_notify = Service['slurmd']
+  } else {
+    $slurmd_notify = undef
   }
 
-  if $slurm::is_slurm_db {
-    include slurm::common
-    include slurm::db::install
-    include slurm::db::config
-    include slurm::db::service
-
-    Class['slurm::common'] ->
-    Class['slurm::db::install']->
-    Class['slurm::db::config']->
-    Class['slurm::db::service']
+  if $slurmctld and $slurmctld_service_ensure == 'running' and $reload_services and $facts['slurmctld_version'] {
+    $slurmctld_notify = Exec['scontrol reconfig']
+  } elsif $slurmctld and $slurmctld_service_ensure == 'running' and $restart_services {
+    $slurmctld_notify = Service['slurmctld']
+  } else {
+    $slurmctld_notify = undef
   }
 
-  if $slurm::is_slurm_login {
-    include slurm::common
-    include slurm::login::config
+  if $slurmdbd and $slurmdbd_service_ensure == 'running' and $reload_services and $facts['slurmdbd_version'] {
+    $slurmdbd_notify = Exec['slurmdbd reload']
+  } elsif $slurmdbd and $slurmdbd_service_ensure == 'running' and $restart_services {
+    $slurmdbd_notify = Service['slurmdbd']
+  } else {
+    $slurmdbd_notify = undef
+  }
+  # finally combine the ones not undef to an array for later use in slurm::common::install
+  $service_notify = flatten([$slurmd_notify, $slurmctld_notify, $slurmdbd_notify]).filter |$val| { $val =~ NotUndef }
 
-    Class['slurm::common'] ->
-    Class['slurm::login::config']
+  if ! ($client or $slurmd or $slurmdbd or $slurmctld) {
+    fail('No slurm feature has been selected. Select at least one of client, slurmd, slurmctld or slurmdbd.')
   }
 
+  if $client {
+    contain slurm::client
+  }
+
+  if $slurmd {
+    contain slurm::slurmd
+  }
+
+  if $slurmdbd {
+    contain slurm::slurmdbd
+  }
+
+  if $slurmctld {
+    contain slurm::slurmctld
+  }
 }
-
